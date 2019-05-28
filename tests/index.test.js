@@ -41,7 +41,7 @@ describe('Minorm', function() {
   describe('Insert', function() {
     it('should insert several records', async function() {
       let prm1 = MODEL_RECORDS.map(async (rec) => {
-        return await Model.insert(rec).catch((e) => {})
+        return await Model.insert(rec) //.catch((e) => {})
       })
       await Promise.all(prm1)
     })

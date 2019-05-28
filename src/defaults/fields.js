@@ -1,5 +1,3 @@
-
-
 export default (fields) => {
   if (fields === undefined)
     return {}

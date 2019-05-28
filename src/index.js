@@ -10,7 +10,7 @@ class Minorm {
     this.defaultFields= makeFields(defaultFields)
     this.log    = log!==undefined ? log : logger
     const pgp   = require('pg-promise')()
-    this.db     = pgp(this.config)  
+    this.db     = pgp(this.config)
   }
 
   model(tablename, definition) {
