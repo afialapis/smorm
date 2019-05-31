@@ -2,6 +2,22 @@
   "name": "minorm",
   "version": "0.0.1",
   "description": "A minor ORM",
+  "author": "Donato Lorenzo <donato@afialapis.com>",
+  "contributors": [
+    "Donato Lorenzo <donato@afialapis.com>"
+  ],
+  "license": "MIT",  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/afialapis/minorm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/afialapis/minorm/issues"
+  },
+  "homepage": "https://minorm.afialapis.com/",  
+  "files": [
+    "lib"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src",
@@ -12,15 +28,14 @@
     "build-dist": "webpack",
     "build-dist-min": "NODE_ENV=production webpack",
     "dist": "npm run clean-dist && npm run build-dist && npm run build-dist-min",
-    "prepublish": "npm run test && npm run build && npm run dist"
+    "prepare": "npm run test && npm run build && npm run dist"
   },
   "keywords": [
     "js",
     "orm",
     "sql"
   ],
-  "author": "Donato Lorenzo <donato@afialapis.com>",
-  "license": "MIT",
+
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
