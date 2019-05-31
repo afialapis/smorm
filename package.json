@@ -1,5 +1,5 @@
 {
-  "name": "minorm",
+  "name": "smorm",
   "version": "0.0.1",
   "description": "A minor ORM",
   "author": "Donato Lorenzo <donato@afialapis.com>",
@@ -9,12 +9,12 @@
   "license": "MIT",  
   "repository": {
     "type": "git",
-    "url": "https://github.com/afialapis/minorm.git"
+    "url": "https://github.com/afialapis/smorm.git"
   },
   "bugs": {
-    "url": "https://github.com/afialapis/minorm/issues"
+    "url": "https://github.com/afialapis/smorm/issues"
   },
-  "homepage": "https://minorm.afialapis.com/",  
+  "homepage": "https://smorm.afialapis.com/",  
   "files": [
     "lib"
   ],

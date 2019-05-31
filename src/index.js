@@ -4,7 +4,7 @@ import makeModel  from './model'
 import fmtQuery   from './util/format'
 import logger     from './util/logger'
 
-class Minorm {
+class Smorm {
   constructor(config, defaultFields, log) {
     this.config = makeConfig(config)
     this.defaultFields= makeFields(defaultFields)
@@ -59,5 +59,5 @@ class Minorm {
 }
 
 export default (config, defaultFields, log) => {
-  return new Minorm(config, defaultFields, log)
+  return new Smorm(config, defaultFields, log)
 }

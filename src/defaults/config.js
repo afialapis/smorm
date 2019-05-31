@@ -3,7 +3,7 @@ import clone from '../util/clone'
 const DEFAULT_CONFIG= {
   host:     'localhost',
   port:     5432,
-  database: 'minorm',
+  database: 'smorm',
   user:     'postgres',
   password: 'postgres',
   // Maximum/Minimum number of connection in pool

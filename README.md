@@ -1,8 +1,8 @@
-# Minorm
+# Smorm
 
-![minorm](https://minorm.afialapis.com/minorm.png)
+![smorm](https://smorm.afialapis.com/smorm.png)
 
-Minorm is a minimalist ORM, for those out there who still feel good typing some raw SQL
+Smorm is a small ORM, for those out there who still feel good typing some raw SQL
 
 What it does:
 
@@ -22,18 +22,18 @@ Hopefully, in the near future, we'll add support for MySql, MsSql, Sqlite, ... w
 
 ## Install
 
-`npm install minorm --save-dev`
+`npm install smorm --save-dev`
 
 ## Get started
 
 ```javascript
 // Using Node.js `require()`
-const minorm = require('minorm');
+const smorm = require('smorm');
 
 // Using ES6 imports
-import minorm from 'minorm';
+import smorm from 'smorm';
 ```
 
 ## Documentation
 
-At [minorm.afialapis.com](http://minorm.afialapis.com/) you can find detailed docs.
+At [smorm.afialapis.com](http://smorm.afialapis.com/) you can find detailed docs.

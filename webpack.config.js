@@ -11,8 +11,8 @@ const plugins = [
 ]
 
 const filename = env === 'production'
-  ? 'minorm.min.js'
-  : 'minorm.js'
+  ? 'smorm.min.js'
+  : 'smorm.js'
 
 module.exports = {
   mode: env,

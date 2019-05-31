@@ -1,4 +1,4 @@
-import Minorm from '../src'
+import Smorm from '../src'
 import {INTEGER, TEXT} from '../src/datatypes'
 var assert = require('assert')
 
@@ -27,15 +27,15 @@ const MODEL_RECORDS= [
 
 let db, Model
 
-describe('Minorm', function() {
+describe('Smorm', function() {
   describe('database', function() {
-    it('should create Minorm database', function() {
-      db= Minorm()
+    it('should create Smorm database', function() {
+      db= Smorm()
     })
   }),
   describe('Model', function() {
-    it('should create a Minorm model', function() {
-      Model = db.model('minorm_test', MODEL_DEFINITION)
+    it('should create a Smorm model', function() {
+      Model = db.model('smorm_test', MODEL_DEFINITION)
     })
   }),
   describe('Insert', function() {
