@@ -33,7 +33,17 @@ module.exports = {
         loader: 'babel-loader',
         include: [
           path.join(__dirname, 'src')
-        ]
+        ],
+        query: {
+          cacheDirectory: false,
+          presets: [
+            ['@babel/preset-env', {targets: {esmodules: true}}],
+          ],
+          plugins: [
+            // Stage 3
+            '@babel/plugin-proposal-object-rest-spread',
+          ]
+        }
       }
     ]
   },

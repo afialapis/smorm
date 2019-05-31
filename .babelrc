@@ -1,7 +1,10 @@
 {
-  "presets": ["@babel/preset-env"],
+  "presets": [
+    ["@babel/preset-env", {"targets": {"esmodules": true}}]
+  ],
   "plugins": [
-    "transform-object-rest-spread",
-    "transform-export-extensions"
+    "transform-export-extensions",
+    // Stage 3
+    "@babel/plugin-proposal-object-rest-spread",    
   ]
 }

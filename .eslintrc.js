@@ -6,14 +6,17 @@ module.exports = {
     "node": true,
     "mocha": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/warnings"
+  ],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 8,
   },
   "rules": {
     "indent": [
-      "error",
+      "warn",
       2
     ],
     "linebreak-style": [
@@ -28,6 +31,7 @@ module.exports = {
       "error",
       "never"
     ],
+    "no-unused-vars": "warn",    
     "no-console": 'off'
   }
 };
