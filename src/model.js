@@ -1,13 +1,16 @@
 /*eslint no-unused-vars: ["error", { "argsIgnorePattern": "opt" }]*/
-
-import clone from './util/clone'
 import fmtQuery from './util/format'
 
-class _BaseModel {
-  constructor(db, tablename, definition) {
+class Model {
+  constructor(db, tablename, definitionOrFilepath) {
     this.db         = db
     this.tablename  = tablename
-    this.definition = Object.assign(clone(db.defaultFields), definition)
+    if (typeof definitionOrFilepath != 'object') {
+      const fs   = require('fs')
+      this.definition = JSON.parse(fs.readFileSync(definitionOrFilepath, 'utf8'))
+    } else {
+      this.definition = definitionOrFilepath
+    }    
   }
 
   get fields() {
@@ -101,10 +104,23 @@ class _BaseModel {
     this.db.log.debug('Returned ' + data.length + ' rows')    
   }
 
+  async keyList(options) {    
+    let res= {}
+    const d = await this.read({}, {fields: ['id', 'name'], transaction: options.transaction})
+    d.map((d) => {res[d.id]= d.name})
+    return res
+  }
 
 
   async find(id, options) {
+    if (isNaN(id) || id <= 0) {    
+      const msg = this.model.tablename + ': cannot find, invalid Id <' + id + '>'
+      this.db.log.error(msg)
+      throw new Error(msg)
+    }
+
     const data= await this.read({id: id}, options)
+    
     try {
       return data[0]
     } catch(error) {
@@ -112,6 +128,18 @@ class _BaseModel {
       this.db.log.error(error.stack)      
       return {}
     }
+  }
+
+  prepareObj(obj) {
+    let out = {}
+    
+    Object.keys(obj)
+      .filter((k) => this.fields.indexOf(k) >=0)
+      .map((k) => {
+        out[k] = obj[k]
+      })
+
+    return out
   }
 
   async beforeInsert(params, options) {
@@ -127,12 +155,14 @@ class _BaseModel {
   }
 
 
-  async insert(prms, opts) {
+  async insert(data, opts) {
+    data= this.prepareObj(data)
 
     if (opts===undefined)
       opts= {}
+    
 
-    let [params, options, goon] = await this.beforeInsert(prms, opts)
+    let [params, options, goon] = await this.beforeInsert(data, opts)
 
     if (! goon)
       return []
@@ -154,10 +184,15 @@ class _BaseModel {
 
     let id= undefined
     try {
-      const data = await prm
-      id= await this.afterInsert(data.id, options)
+      const ndata = await prm
+      id= await this.afterInsert(ndata.id, options)
       this.db.log.debug(fmtQuery(query, ivalues))
       this.db.log.debug('Created with Id: '+ id)
+
+      if (id == null) {
+        const msg = this.model.tablename + ': cannot save ' + JSON.stringify(data)
+        this.db.log.error(msg)
+      }      
     } catch (error) {
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
@@ -180,12 +215,14 @@ class _BaseModel {
   }
 
 
-  async update(prms, filt, opts) {
+  async update(data, filt, opts) {
+    data= this.prepareObj(data)
+    delete data.id
 
     if (opts===undefined)
       opts= {}
 
-    let [params, filter, options, goon] = await this.beforeUpdate(prms, filt, opts)
+    let [params, filter, options, goon] = await this.beforeUpdate(data, filt, opts)
 
     if (! goon)
       return []
@@ -221,10 +258,15 @@ class _BaseModel {
 
     let count= 0
     try {
-      const data = await prm
-      count= this.afterUpdate(data.count, options)
+      const ndata = await prm
+      count= this.afterUpdate(ndata.count, options)
       this.db.log.debug(fmtQuery(query, allvalues))
       this.db.log.debug('Updated ' + count +' records ')
+
+      if (count == 0) {
+        const msg = this.model.tablename + ': no record updated with filter ' + JSON.stringify(filt) + ' -- ' + JSON.stringify(data)
+        this.db.log.warn(msg)
+      }      
     } catch (error) {
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
@@ -254,8 +296,11 @@ class _BaseModel {
 
     let [filter, options, goon] = await this.beforeDelete(filt, opts)
 
-    if (! goon)
-      return []    
+    if (! goon) {
+      const msg = this.model.tablename + ': Cannot delete for filter ' + JSON.stringify(filt)
+      this.db.log.warn(msg)
+      return 0
+    }  
 
     const wtuple = this._objToTuple(filter)
     const wfields = wtuple[0]
@@ -290,9 +335,4 @@ class _BaseModel {
   }  
 }
 
-
-function makeModel(db, tablename, definition)  {
-  return new _BaseModel(db, tablename, definition)
-}
-
-export default makeModel
+export default Model

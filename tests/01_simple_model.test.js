@@ -1,18 +1,22 @@
-import Smorm from '../src'
-import {INTEGER, TEXT} from '../src/datatypes'
+import {Smorm, Model, datatypes} from '../src/index'
 var assert = require('assert')
 
 const MODEL_DEFINITION= {
+  id: {
+    type: datatypes.INTEGER,
+    key: true,
+    nullable: false
+  },
   name: {
-    type: TEXT,
+    type: datatypes.TEXT,
     nullable: false,
   },
   description: {
-    type: TEXT,
+    type: datatypes.TEXT,
     nullable: true,
   },
   counter: {
-    type: INTEGER,
+    type: datatypes.INTEGER,
     nullable: true,
   }    
 }
@@ -25,7 +29,8 @@ const MODEL_RECORDS= [
 ]
 
 
-let db, Model
+let db, TestModel
+
 
 describe('Smorm', function() {
   describe('database', function() {
@@ -33,40 +38,40 @@ describe('Smorm', function() {
       db= Smorm()
     })
   }),
-  describe('Model', function() {
+  describe('TestModel', function() {
     it('should create a Smorm model', function() {
-      Model = db.model('smorm_test', MODEL_DEFINITION)
+      TestModel = new Model(db, 'smorm_test', MODEL_DEFINITION)
     })
   }),
   describe('Insert', function() {
     it('should insert several records', async function() {
       let prm1 = MODEL_RECORDS.map(async (rec) => {
-        return await Model.insert(rec) //.catch((e) => {})
+        return await TestModel.insert(rec) //.catch((e) => {})
       })
       await Promise.all(prm1)
     })
   }),
   describe('Update', function() {
     it('should update one record', async function() {
-      const count= await Model.update({description: 'A not so simple man'}, {name: 'Peter'})
+      const count= await TestModel.update({description: 'A not so simple man'}, {name: 'Peter'})
       assert.equal(count, 1)
     })
   }),
   describe('Update', function() {
     it('should update several records', async function() {
-      const count= await Model.update({name: 'Frederic'}, {counter: 99})
+      const count= await TestModel.update({name: 'Frederic'}, {counter: 99})
       assert.equal(count, 2)
     })
   }),
   describe('Delete', function() {
     it('should delete one record', async function() {
-      const count= await Model.delete( {name: 'Jonny'})
+      const count= await TestModel.delete( {name: 'Jonny'})
       assert.equal(count, 1)
     })
   }),
   describe('Delete', function() {
     it('should delete other records', async function() {
-      const count= await Model.delete( {})
+      const count= await TestModel.delete( {})
       assert.equal(count, 3)
     })
   }),

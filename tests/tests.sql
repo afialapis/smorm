@@ -7,5 +7,7 @@ CREATE TABLE smorm_test (
   id           serial,
   name         TEXT NOT NULL,
   description  TEXT NULL,
-  counter      INTEGER
+  counter      INTEGER,
+  created_at   INTEGER,
+  last_updated_at INTEGER
 );
