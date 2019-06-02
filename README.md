@@ -4,6 +4,7 @@
 
 Smorm is a small ORM, for those out there who still feel good typing some raw SQL
 
+
 What it does:
 
   - Basic and typical Models usage
