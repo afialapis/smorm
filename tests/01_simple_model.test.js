@@ -1,4 +1,5 @@
-import {Smorm, Model, datatypes} from '../src/index'
+import {Model, datatypes} from '../src/index'
+import db from './db'
 var assert = require('assert')
 
 const MODEL_DEFINITION= {
@@ -29,15 +30,10 @@ const MODEL_RECORDS= [
 ]
 
 
-let db, TestModel
+let TestModel
 
 
 describe('Smorm', function() {
-  describe('database', function() {
-    it('should create Smorm database', function() {
-      db= Smorm()
-    })
-  }),
   describe('TestModel', function() {
     it('should create a Smorm model', function() {
       TestModel = new Model(db, 'smorm_test', MODEL_DEFINITION)

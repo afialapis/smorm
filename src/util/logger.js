@@ -11,7 +11,7 @@ const LEVELS= {
 
 class Logger {
   constructor (level) {
-    this.level= LEVELS[level]
+    this.level= LEVELS[level != undefined ? level : 'debug']
   }
 
   _log(color, lvl, msg) {
@@ -45,4 +45,4 @@ class Logger {
   }
 }
 
-export default new Logger()
+export default Logger

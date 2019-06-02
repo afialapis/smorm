@@ -1,13 +1,20 @@
 import makeConfig from './defaults/config'
 import fmtQuery   from './util/format'
-import logger     from './util/logger'
+import Logger     from './util/logger'
 
 class Smorm {
   constructor(config, log) {
     this.config = makeConfig(config)
-    this.log    = log!==undefined ? log : logger
     const pgp   = require('pg-promise')()
     this.db     = pgp(this.config)
+
+    if (log==undefined) {
+      this.log= new Logger()
+    } else if (typeof log == 'string') {
+      this.log= new Logger(log)
+    } else {
+      this.log = log
+    }
   }
 
   get transaction() {

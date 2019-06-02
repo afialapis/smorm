@@ -13,7 +13,7 @@ const formatQuery = (qry, params) => {
   q = q.replace(') SELECT count(*) FROM rows', '')
 
   for (const kw in KEYWORDS)
-    q = q.replaceAll(kw, KEYWORDS[kw](kw))
+    q = q.replace(new RegExp(kw, 'g'), KEYWORDS[kw](kw))
 
   let p = params != undefined ? `[${params.join(', ')}]` : ''
 

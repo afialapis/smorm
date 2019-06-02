@@ -10,7 +10,7 @@ class Model {
       this.definition = JSON.parse(fs.readFileSync(definitionOrFilepath, 'utf8'))
     } else {
       this.definition = definitionOrFilepath
-    }    
+    } 
   }
 
   get fields() {
