@@ -1,6 +1,6 @@
 {
   "name": "smorm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A minor ORM",
   "author": "Donato Lorenzo <donato@afialapis.com>",
   "contributors": [
