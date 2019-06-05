@@ -1,4 +1,4 @@
-import {Smorm} from '../src/index'
+import Smorm from '../src/index'
 
 const DB_CONFIG= {
   host:     'localhost',
