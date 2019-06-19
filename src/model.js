@@ -35,9 +35,9 @@ class Model {
   }
 
   async afterRead(data, options) {
-    return Promise.resolve([
+    return Promise.resolve(
       data
-    ])
+    )
   }
 
   async read(filt, opts) {
@@ -93,41 +93,42 @@ class Model {
     try {
       data = await prm
     } catch (error) {
+      this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
-      return []
+      data= []
     }
 
     data= await this.afterRead(data, options)
 
+    this.db.log.debug(`${this.tablename} SQL:`)
     this.db.log.debug(fmtQuery(query, wvalues))
-    this.db.log.debug('Returned ' + data.length + ' rows')    
+    this.db.log.debug(`${this.tablename} - Returned ${data.length} rows`)
+
+    return data
   }
 
   async keyList(options) {    
     let res= {}
-    const d = await this.read({}, {fields: ['id', 'name'], transaction: options.transaction})
-    d.map((d) => {res[d.id]= d.name})
+    const data = await this.read({}, {fields: ['id', 'name'], transaction: options ? options.transaction : undefined})
+    data.map((d) => {res[d.id]= d.name})
     return res
   }
 
 
   async find(id, options) {
     if (isNaN(id) || id <= 0) {    
-      const msg = this.model.tablename + ': cannot find, invalid Id <' + id + '>'
+      const msg = this.tablename + ': cannot find, invalid Id <' + id + '>'
       this.db.log.error(msg)
       throw new Error(msg)
     }
 
     const data= await this.read({id: id}, options)
     
-    try {
+    if (Array.isArray(data))
       return data[0]
-    } catch(error) {
-      this.db.log.error(error.constructor.name)
-      this.db.log.error(error.stack)      
-      return {}
-    }
+    
+    this.db.log.warn(`${this.tablename}: Id ${id} does not exist`)
   }
 
   prepareObj(obj) {
@@ -149,9 +150,9 @@ class Model {
   }
 
   async afterInsert(id, options) {
-    return Promise.resolve([
+    return Promise.resolve(
       id
-    ])
+    )
   }
 
 
@@ -186,14 +187,16 @@ class Model {
     try {
       const ndata = await prm
       id= await this.afterInsert(ndata.id, options)
+      this.db.log.debug(`${this.tablename} SQL:`)
       this.db.log.debug(fmtQuery(query, ivalues))
       this.db.log.debug('Created with Id: '+ id)
 
       if (id == null) {
-        const msg = this.model.tablename + ': cannot save ' + JSON.stringify(data)
+        const msg = this.tablename + ': cannot save ' + JSON.stringify(data)
         this.db.log.error(msg)
       }      
     } catch (error) {
+      this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
     }
@@ -209,9 +212,9 @@ class Model {
   }
 
   async afterUpdate(rows, options) {
-    return Promise.resolve([
+    return Promise.resolve(
       rows
-    ])
+    )
   }
 
 
@@ -232,7 +235,7 @@ class Model {
     const uvalues = utuple[1]
 
     if (ufields.length == 0) {
-      this.db.log.error('Nothing to update')
+      this.db.log.error(`${this.tablename} ERROR: Nothing to update`)
       return 0
     }
 
@@ -260,14 +263,16 @@ class Model {
     try {
       const ndata = await prm
       count= this.afterUpdate(ndata.count, options)
+      this.db.log.debug(`${this.tablename} SQL:`)
       this.db.log.debug(fmtQuery(query, allvalues))
       this.db.log.debug('Updated ' + count +' records ')
 
       if (count == 0) {
-        const msg = this.model.tablename + ': no record updated with filter ' + JSON.stringify(filt) + ' -- ' + JSON.stringify(data)
+        const msg = this.tablename + ': no record updated with filter ' + JSON.stringify(filt) + ' -- ' + JSON.stringify(data)
         this.db.log.warn(msg)
       }      
     } catch (error) {
+      this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
     }
@@ -283,9 +288,9 @@ class Model {
   }
 
   async afterDelete(rows, options) {
-    return Promise.resolve([
+    return Promise.resolve(
       rows
-    ])
+    )
   }
 
 
@@ -297,7 +302,7 @@ class Model {
     let [filter, options, goon] = await this.beforeDelete(filt, opts)
 
     if (! goon) {
-      const msg = this.model.tablename + ': Cannot delete for filter ' + JSON.stringify(filt)
+      const msg = this.tablename + ': Cannot delete for filter ' + JSON.stringify(filt)
       this.db.log.warn(msg)
       return 0
     }  
@@ -324,9 +329,11 @@ class Model {
     try {
       const data = await prm
       count= this.afterDelete(data.count, options)
+      this.db.log.debug(`${this.tablename} SQL:`)
       this.db.log.debug(fmtQuery(query, wvalues))
       this.db.log.debug('Deleted ' + count + ' records ')
     } catch (error) {
+      this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
     }    
