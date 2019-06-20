@@ -101,7 +101,7 @@ class Model {
 
     data= await this.afterRead(data, options)
 
-    this.db.log.debug(`${this.tablename} SQL:`)
+    this.db.log.debug(`${this.tablename} read() SQL:`)
     this.db.log.debug(fmtQuery(query, wvalues))
     this.db.log.debug(`${this.tablename} - Returned ${data.length} rows`)
 
@@ -149,7 +149,7 @@ class Model {
     ])
   }
 
-  async afterInsert(id, options) {
+  async afterInsert(id, params, options) {
     return Promise.resolve(
       id
     )
@@ -186,8 +186,8 @@ class Model {
     let id= undefined
     try {
       const ndata = await prm
-      id= await this.afterInsert(ndata.id, options)
-      this.db.log.debug(`${this.tablename} SQL:`)
+      id= await this.afterInsert(ndata.id, params, options)
+      this.db.log.debug(`${this.tablename} insert() SQL:`)
       this.db.log.debug(fmtQuery(query, ivalues))
       this.db.log.debug('Created with Id: '+ id)
 
@@ -263,7 +263,7 @@ class Model {
     try {
       const ndata = await prm
       count= this.afterUpdate(ndata.count, options)
-      this.db.log.debug(`${this.tablename} SQL:`)
+      this.db.log.debug(`${this.tablename} update() SQL:`)
       this.db.log.debug(fmtQuery(query, allvalues))
       this.db.log.debug('Updated ' + count +' records ')
 
@@ -329,7 +329,7 @@ class Model {
     try {
       const data = await prm
       count= this.afterDelete(data.count, options)
-      this.db.log.debug(`${this.tablename} SQL:`)
+      this.db.log.debug(`${this.tablename} delete() SQL:`)
       this.db.log.debug(fmtQuery(query, wvalues))
       this.db.log.debug('Deleted ' + count + ' records ')
     } catch (error) {
