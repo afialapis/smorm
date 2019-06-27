@@ -1,17 +1,18 @@
 import {RED, LIGHT_RED, YELLOW, LIGHT_GREEN, LIGHT_BLUE, LIGHT_CYAN} from './colors'
 
 const LEVELS= {
-  error: 1,
-  warn: 2,
-  info: 3,
+  none   : 0,
+  error  : 1,
+  warn   : 2,
+  info   : 3,
   verbose: 4,
-  debug: 5,
-  silly: 6
+  debug  : 5,
+  silly  : 6
 }
 
 class Logger {
   constructor (level) {
-    this.level= LEVELS[level != undefined ? level : 'debug']
+    this.level= LEVELS[level != undefined ? level : 'none']
   }
 
   _log(color, lvl, msg) {

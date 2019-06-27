@@ -1,4 +1,4 @@
-/*eslint no-unused-vars: ["error", { "argsIgnorePattern": "opt" }]*/
+/*eslint no-unused-vars: ["warn", { "argsIgnorePattern": "opt" }]*/
 import fmtQuery from './util/format'
 
 class Model {
@@ -129,6 +129,7 @@ class Model {
       return data[0]
     
     this.db.log.warn(`${this.tablename}: Id ${id} does not exist`)
+    return {}
   }
 
   prepareObj(obj) {
