@@ -1,6 +1,6 @@
 # Intro
 
-![alt text](https://smorm.afialapis.com/assets/images/logo/smorm_name.png))
+![Smorm logo](https://smorm.afialapis.com/assets/images/logo/smorm_name.png)
 
 [Smorm](http://smorm.afialapis.com/) is a small, minimalist ORM, for those out there who still feel good typing some raw SQL.
 
