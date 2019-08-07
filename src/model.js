@@ -263,7 +263,7 @@ class Model {
     let count= 0
     try {
       const ndata = await prm
-      count= this.afterUpdate(ndata.count, options)
+      count= await this.afterUpdate(ndata.count, options)
       this.db.log.debug(`${this.tablename} update() SQL:`)
       this.db.log.debug(fmtQuery(query, allvalues))
       this.db.log.debug('Updated ' + count +' records ')
@@ -329,7 +329,7 @@ class Model {
     let count= 0
     try {
       const data = await prm
-      count= this.afterDelete(data.count, options)
+      count= await this.afterDelete(data.count, options)
       this.db.log.debug(`${this.tablename} delete() SQL:`)
       this.db.log.debug(fmtQuery(query, wvalues))
       this.db.log.debug('Deleted ' + count + ' records ')
