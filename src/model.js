@@ -34,7 +34,7 @@ class Model {
     ])
   }
 
-  async afterRead(data, options) {
+  async afterRead(data, filter, options) {
     return Promise.resolve(
       data
     )
@@ -99,7 +99,7 @@ class Model {
       data= []
     }
 
-    data= await this.afterRead(data, options)
+    data= await this.afterRead(data, filter, options)
 
     this.db.log.debug(`${this.tablename} read() SQL:`)
     this.db.log.debug(fmtQuery(query, wvalues))
@@ -212,7 +212,7 @@ class Model {
     ])
   }
 
-  async afterUpdate(rows, options) {
+  async afterUpdate(rows, params, filter, options) {
     return Promise.resolve(
       rows
     )
@@ -263,7 +263,7 @@ class Model {
     let count= 0
     try {
       const ndata = await prm
-      count= await this.afterUpdate(ndata.count, options)
+      count= await this.afterUpdate(ndata.count, params, filter, options)
       this.db.log.debug(`${this.tablename} update() SQL:`)
       this.db.log.debug(fmtQuery(query, allvalues))
       this.db.log.debug('Updated ' + count +' records ')
@@ -288,7 +288,7 @@ class Model {
     ])
   }
 
-  async afterDelete(rows, options) {
+  async afterDelete(rows, filter, options) {
     return Promise.resolve(
       rows
     )
@@ -329,7 +329,7 @@ class Model {
     let count= 0
     try {
       const data = await prm
-      count= await this.afterDelete(data.count, options)
+      count= await this.afterDelete(data.count, filter, options)
       this.db.log.debug(`${this.tablename} delete() SQL:`)
       this.db.log.debug(fmtQuery(query, wvalues))
       this.db.log.debug('Deleted ' + count + ' records ')
