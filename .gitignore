@@ -34,3 +34,4 @@ lib
 dist
 npm-debug.log*
 *.sublime-project
+.vscode
