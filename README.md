@@ -2,6 +2,11 @@
 
 ![Smorm logo](https://smorm.afialapis.com/assets/images/logo/smorm_name.png)
 
+[![NPM Version](https://badge.fury.io/js/smorm.svg)](https://www.npmjs.com/package/smorm)
+[![Dependency Status](https://david-dm.org/afialapis/smorm.svg)](https://david-dm.org/afialapis/smorm)
+[![NPM Downloads](https://img.shields.io/npm/dm/smorm.svg?style=flat)](https://www.npmjs.com/package/smorm)
+
+
 [Smorm](http://smorm.afialapis.com/) is a small, minimalist ORM, for those out there who still feel good typing some raw SQL.
 
 What it does:
