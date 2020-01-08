@@ -54,7 +54,7 @@ const Smorm = require('smorm');
 import Smorm from 'smorm';
 ```
 
-A simple way to work with Smorm: create an unique 
+A simple way to work with `smorm`: create an unique 
 db connection to be used widely trough your app.
 
 ```javascript
@@ -75,9 +75,11 @@ The second parameter on the ```Smorm``` call indicates the logging level.
 
 Possible values are:
 
-  - `undefined` or `'none'` => will disable any Smorm logging
+  - `undefined` or `'none'` => will disable any `smorm` logging
   - `'error'`, `'warn'` or `'debug'`
   - an object implementing the methods `error()`, `warn()` and `debug()`
+
+
 
 # Simple querying
 
@@ -101,7 +103,10 @@ const query = 'SELECT name, job FROM employee WHERE id = $1'
 const result= db.select_one(qry, [1])
 ```
 
+
+
 # Using models
+
 
 ## Model definition
 
@@ -120,8 +125,8 @@ You have to indicate, for each field:
   - key: if the field is table's Primary Key
   - nullable: if the field allows NULL values
 
-There is no way to specify table relations, cause Smorm does nothing about it. Yet. 
-This may change in future versions: Smorm wants to make sense out of its 'r'!
+There is no way to specify table relations, cause `smorm` does nothing about it. Yet. 
+This may change in future versions: `smorm` wants to make sense out of its 'r'!
 
 ```javascript
 const MODEL_DEFINITION= {
@@ -145,6 +150,10 @@ const MODEL_DEFINITION= {
 }
 ```
 
+
+
+
+
 ## Model instantiation
 
 Next thing is just instantiate the model:
@@ -156,10 +165,13 @@ export default TestModel
 
 As for with db connection, you may work with an unique instance per model.
 
-In Smorm, a Model instance always refers to the database table; it never refers to a single record.
+In `smorm`, a Model instance always refers to the database table; it never refers to a single record.
 
 In other words: unlike other ORMs, you will not do `const model= Model.create(); model.fieldA= 'value'; model.save()`.
-In Smorm you will do `Model.insert({data})` or `Model.update({data}, {filter})`.
+In `smorm` you will do `Model.insert({data})` or `Model.update({data}, {filter})`.
+
+
+
 
 
 ## Insert
@@ -184,9 +196,13 @@ await Promise.all(prms)
   
   - `data`: an object with "what to insert". Fields that do not exist on Model definition will be discarded.
   - `options`: an object that may contain following fields:
-    - `transaction`: an Smorm transaction object
+    - `transaction`: an `smorm` transaction object
 
 It returns an `int` with the `.id` of the newly created record.
+
+
+
+
 
 ## Update
 
@@ -200,11 +216,15 @@ const count= await TestModel.update({description: 'A not so simple man'}, {name:
 `.update()` parameters are:
   
   - `data`: an object with "what to update". Fields that do not exist on Model definition will be discarded.
-  - `filter`: an object with "which recors to update". Fields that do not exist on Model definition will be discarded.
+  - `filter`: an object with "which records to update". Fields that do not exist on Model definition will be discarded.
   - `options`: an object that may contain following fields:
-    - `transaction`: an Smorm transaction object
+    - `transaction`: an `smorm` transaction object
 
 It returns an `int` with the number of affected records by the update.
+
+
+
+
 
 ## Delete
 
@@ -219,9 +239,13 @@ const count= await TestModel.delete( {name: 'Jonny'})
   
   - `filter`: an object with "which recors to delete". Fields that do not exist on Model definition will be discarded.
   - `options`: an object that may contain following fields:
-    - `transaction`: an Smorm transaction object
+    - `transaction`: an `smorm` transaction object
 
 It returns an `int` with the number of deleted records.
+
+
+
+
 
 ## Read
 
@@ -242,9 +266,12 @@ const records= await TestModel.read( counter: 99 )
     - `sortby`: indicates wat field to sort by the read. It may be an `string` with the field's name 
                 (sort will be `ASC`), or a two elements Array like `[field_name, ASC|DESC]`
     - `limit` and `offset`: to make paginated reads
-    - `transaction`: an Smorm transaction object
+    - `transaction`: an `smorm` transaction object
 
 It returns an Array of objects, empty if no record was found with the specified filter.
+
+
+
 
 ## Find
 
@@ -258,9 +285,14 @@ const record= await TestModel.find( id: 1 )
 `.find()` parameters are:
   
   - `id`: an `int` with the `.id` to look for
-    - `transaction`: an Smorm transaction object
+  - `options`: an object that may contain following fields:
+    - `transaction`: an `smorm` transaction object
 
 It returns an object with the desired record, empty if none was found.
+
+
+
+
 
 # Todo
 
