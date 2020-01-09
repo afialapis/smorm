@@ -40,14 +40,16 @@ class Model {
     )
   }
 
-  _ensureDefs(record) {
-    this.fields.map((fld) => {
-      if (record[fld]===null) {
-        const fdef= this.definition[fld]
-        if (fdef.hasOwnProperty('default')) {
-          record[fld]= fdef.default
+  ensureDefs(data) {
+    data.map((record) => {
+      this.fields.map((fld) => {
+        if (record[fld]===null) {
+          const fdef= this.definition[fld]
+          if (fdef.hasOwnProperty('default')) {
+            record[fld]= fdef.default
+          }
         }
-      }
+      })
     })
   }
 
@@ -110,7 +112,7 @@ class Model {
       data= []
     }
 
-    data.map((rec) => this._ensureDefs(rec))
+    this.ensureDefs(data)
 
     data= await this.afterRead(data, filter, options)
 
@@ -140,8 +142,8 @@ class Model {
     
     let odata= {}
     if (Array.isArray(data)) {
+      this.ensureDefs(data)
       odata= data[0]
-      this._ensureDefs(odata)
     } else {
       this.db.log.warn(`${this.tablename}: Id ${id} does not exist`)
     }
