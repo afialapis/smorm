@@ -53,16 +53,7 @@ class Model {
     })
   }
 
-  async read(filt, opts) {
-
-    if (opts===undefined)
-      opts= {}
-
-    const [filter, options, goon] = await this.beforeRead(filt, opts)
-
-    if (! goon)
-      return []
-    
+  prepareQuery(filter, options) {
 
     const sselect = options.fields != undefined ? options.fields.join(',') : '*'
 
@@ -96,6 +87,21 @@ class Model {
       query += ` LIMIT ${options.limit} OFFSET ${options.offset}`
     }
 
+    return [query, wvalues]
+  }
+
+  async read(filt, opts) {
+
+    if (opts===undefined)
+      opts= {}
+
+    const [filter, options, goon] = await this.beforeRead(filt, opts)
+
+    if (! goon)
+      return []
+
+    const [query, wvalues] = this.prepareQuery(filter, options)
+
     const action = (t) => {
       return t.any(query, wvalues)
     }
@@ -115,7 +121,7 @@ class Model {
     this.ensureDefs(data)
 
     data= await this.afterRead(data, filter, options)
-
+    
     this.db.log.debug(`${this.tablename} read() SQL:`)
     this.db.log.debug(fmtQuery(query, wvalues))
     this.db.log.debug(`${this.tablename} - Returned ${data.length} rows`)
