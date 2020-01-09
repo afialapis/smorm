@@ -40,6 +40,17 @@ class Model {
     )
   }
 
+  _ensureDefs(record) {
+    this.fields.map((fld) => {
+      if (record[fld]===null) {
+        const fdef= this.definition[fld]
+        if (fdef.hasOwnProperty('default')) {
+          record[fld]= fdef.default
+        }
+      }
+    })
+  }
+
   async read(filt, opts) {
 
     if (opts===undefined)
@@ -99,6 +110,8 @@ class Model {
       data= []
     }
 
+    data.map((rec) => this._ensureDefs(rec))
+
     data= await this.afterRead(data, filter, options)
 
     this.db.log.debug(`${this.tablename} read() SQL:`)
@@ -125,11 +138,15 @@ class Model {
 
     const data= await this.read({id: id}, options)
     
-    if (Array.isArray(data))
-      return data[0]
-    
-    this.db.log.warn(`${this.tablename}: Id ${id} does not exist`)
-    return {}
+    let odata= {}
+    if (Array.isArray(data)) {
+      odata= data[0]
+      this._ensureDefs(odata)
+    } else {
+      this.db.log.warn(`${this.tablename}: Id ${id} does not exist`)
+    }
+
+    return odata
   }
 
   prepareObj(obj) {
