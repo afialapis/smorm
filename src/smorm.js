@@ -21,12 +21,15 @@ class Smorm {
     return this.db.tx  
   }
 
-  async select(query, values, transaction) {
+  async select(query, values, options) {
     const action = (t) => {
       return t.any(query, values)
     }
   
-    const prm = transaction != undefined ? transaction(action) : this.transaction(action)
+    const trx = options!=undefined
+      ? options.transaction!=undefined ? options.transaction : this.transaction
+      : this.transaction
+    const prm = trx(action)
   
     let data= []
 
@@ -42,8 +45,12 @@ class Smorm {
     return data
   }
   
-  async select_one(query, values, transaction, omitWarning= false) {
-    const data = await this.select(query, values, transaction)
+  async select_one(query, values, options) {
+    const data = await this.select(query, values, {transaction: options.transaction})
+
+    const omitWarning = options!=undefined
+      ? options.omitWarning===true ? true : false
+      : false
   
     if (data.length>1 && !omitWarning) {
       this.log.debug(fmtQuery(query, values))
