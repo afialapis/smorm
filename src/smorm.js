@@ -21,6 +21,36 @@ class Smorm {
     return this.db.tx  
   }
 
+  async call(query, values, options) {
+    const action = (t) => {
+      return t.oneOrNone(query, values)
+    }
+  
+    const trx = options!=undefined
+      ? options.transaction!=undefined ? options.transaction : this.transaction
+      : this.transaction
+    const prm = trx(action)
+  
+    let ret= null
+
+    try {
+      const res = await prm
+      if (res!=null) {
+        const ks= Object.keys(res)
+        ret= res[ks[0]]
+        if (ks.length>1) {
+          this.log.error(`smorm.call() Returned more than one field. Just ${ks[0]} will be returned. Fields are ${JSON.stringify(ks)}`)
+        }
+      }
+      this.log.debug(fmtQuery(query, values))
+    } catch (error) {
+      this.log.error(error.constructor.name)
+      this.log.error(error.stack)
+    }
+
+    return ret
+  }
+
   async select(query, values, options) {
     const action = (t) => {
       return t.any(query, values)

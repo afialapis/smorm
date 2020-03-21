@@ -297,4 +297,3 @@ It returns an object with the desired record, empty if none was found.
 # Todo
 
 - Transaction creation out of the box
-- Query launchers: db.call
