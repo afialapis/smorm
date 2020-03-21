@@ -209,12 +209,13 @@ class Model {
 
     const prm = options.transaction != undefined ? options.transaction(action) : this.db.transaction(action)
 
+    this.db.log.debug(`${this.tablename} insert() SQL:`)
+    this.db.log.debug(fmtQuery(query, ivalues))
+
     let id= undefined
     try {
       const ndata = await prm
       id= await this.afterInsert(ndata.id, params, options)
-      this.db.log.debug(`${this.tablename} insert() SQL:`)
-      this.db.log.debug(fmtQuery(query, ivalues))
       this.db.log.debug('Created with Id: '+ id)
 
       if (id == null) {
@@ -285,12 +286,13 @@ class Model {
 
     const prm = options.transaction != undefined ? options.transaction(action) : this.db.transaction(action)
 
+    this.db.log.debug(`${this.tablename} update() SQL:`)
+    this.db.log.debug(fmtQuery(query, allvalues))
+
     let count= 0
     try {
       const ndata = await prm
       count= await this.afterUpdate(ndata.count, params, filter, options)
-      this.db.log.debug(`${this.tablename} update() SQL:`)
-      this.db.log.debug(fmtQuery(query, allvalues))
       this.db.log.debug('Updated ' + count +' records ')
 
       if (count == 0) {
@@ -351,12 +353,13 @@ class Model {
 
     const prm = options.transaction != undefined ? options.transaction(action) : this.db.transaction(action)
 
+    this.db.log.debug(`${this.tablename} delete() SQL:`)
+    this.db.log.debug(fmtQuery(query, wvalues))
+
     let count= 0
     try {
       const data = await prm
       count= await this.afterDelete(data.count, filter, options)
-      this.db.log.debug(`${this.tablename} delete() SQL:`)
-      this.db.log.debug(fmtQuery(query, wvalues))
       this.db.log.debug('Deleted ' + count + ' records ')
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
