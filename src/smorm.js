@@ -1,6 +1,7 @@
 import makeConfig from './defaults/config'
 import fmtQuery   from './util/format'
 import Logger     from './util/logger'
+const { performance } = require('perf_hooks')
 
 class Smorm {
   constructor(config, log) {
