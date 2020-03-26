@@ -1,4 +1,5 @@
 /*eslint no-unused-vars: ["warn", { "argsIgnorePattern": "opt" }]*/
+const { performance } = require('perf_hooks')
 import fmtQuery from './util/format'
 
 class Model {
@@ -91,6 +92,7 @@ class Model {
   }
 
   async read(filt, opts) {
+    const started = performance.now()
 
     if (opts===undefined)
       opts= {}
@@ -122,9 +124,12 @@ class Model {
 
     data= await this.afterRead(data, filter, options)
     
-    this.db.log.debug(`${this.tablename} read() SQL:`)
-    this.db.log.debug(fmtQuery(query, wvalues))
-    this.db.log.debug(`${this.tablename} - Returned ${data.length} rows`)
+    if (options.log!==false) {
+      const elapsed = parseFloat( (performance.now() - started) / 1000.0 ).toFixed(2)
+      this.db.log.debug(`${this.tablename} read() SQL:`)
+      this.db.log.debug(fmtQuery(query, wvalues))
+      this.db.log.debug(`${this.tablename} - Returned ${data.length} rows in ${elapsed} seconds`)
+    }
 
     return data
   }
@@ -183,6 +188,8 @@ class Model {
 
 
   async insert(data, opts) {
+    const started = performance.now()
+
     data= this.prepareObj(data)
 
     if (opts===undefined)
@@ -209,19 +216,25 @@ class Model {
 
     const prm = options.transaction != undefined ? options.transaction(action) : this.db.transaction(action)
 
-    this.db.log.debug(`${this.tablename} insert() SQL:`)
-    this.db.log.debug(fmtQuery(query, ivalues))
+    if (options.log!==false) {
+      this.db.log.debug(`${this.tablename} insert() SQL:`)
+      this.db.log.debug(fmtQuery(query, ivalues))
+    }
 
     let id= undefined
     try {
       const ndata = await prm
       id= await this.afterInsert(ndata.id, params, options)
-      this.db.log.debug('Created with Id: '+ id)
+      const elapsed = parseFloat( (performance.now() - started) / 1000.0 ).toFixed(2)
 
       if (id == null) {
         const msg = this.tablename + ': cannot save ' + JSON.stringify(data)
         this.db.log.error(msg)
-      }      
+      } else {
+        if (options.log!==false) {
+          this.db.log.debug(`Created with Id ${id} in ${elapsed} seconds`)
+        }
+      }
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
@@ -246,6 +259,8 @@ class Model {
 
 
   async update(data, filt, opts) {
+    const started = performance.now()
+
     data= this.prepareObj(data)
     delete data.id
 
@@ -286,19 +301,26 @@ class Model {
 
     const prm = options.transaction != undefined ? options.transaction(action) : this.db.transaction(action)
 
-    this.db.log.debug(`${this.tablename} update() SQL:`)
-    this.db.log.debug(fmtQuery(query, allvalues))
+    if (options.log!==false) {
+      this.db.log.debug(`${this.tablename} update() SQL:`)
+      this.db.log.debug(fmtQuery(query, allvalues))
+    }
 
     let count= 0
     try {
       const ndata = await prm
       count= await this.afterUpdate(ndata.count, params, filter, options)
-      this.db.log.debug('Updated ' + count +' records ')
+      
 
       if (count == 0) {
         const msg = this.tablename + ': no record updated with filter ' + JSON.stringify(filt) + ' -- ' + JSON.stringify(data)
         this.db.log.warn(msg)
-      }      
+      } else {
+        if (options.log!==false) {
+          const elapsed = parseFloat( (performance.now() - started) / 1000.0 ).toFixed(2)
+          this.db.log.debug(`Updated ${count} records in ${elapsed} seconds`)
+        }
+      }     
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
@@ -323,6 +345,7 @@ class Model {
 
 
   async delete(filt, opts) {
+    const started = performance.now()
 
     if (opts===undefined)
       opts= {}
@@ -353,14 +376,19 @@ class Model {
 
     const prm = options.transaction != undefined ? options.transaction(action) : this.db.transaction(action)
 
-    this.db.log.debug(`${this.tablename} delete() SQL:`)
-    this.db.log.debug(fmtQuery(query, wvalues))
+    if (options.log!==false) {
+      this.db.log.debug(`${this.tablename} delete() SQL:`)
+      this.db.log.debug(fmtQuery(query, wvalues))
+    }
 
     let count= 0
     try {
       const data = await prm
       count= await this.afterDelete(data.count, filter, options)
-      this.db.log.debug('Deleted ' + count + ' records ')
+      if (options.log!==false) {
+        const elapsed = parseFloat( (performance.now() - started) / 1000.0 ).toFixed(2)
+        this.db.log.debug(`Deleted ${count} records in ${elapsed} seconds`)
+      }
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)

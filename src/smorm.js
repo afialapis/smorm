@@ -22,6 +22,8 @@ class Smorm {
   }
 
   async call(query, values, options) {
+    const started = performance.now()
+
     const action = (t) => {
       return t.oneOrNone(query, values)
     }
@@ -35,6 +37,7 @@ class Smorm {
 
     try {
       const res = await prm
+      
       if (res!=null) {
         const ks= Object.keys(res)
         ret= res[ks[0]]
@@ -42,7 +45,11 @@ class Smorm {
           this.log.error(`smorm.call() Returned more than one field. Just ${ks[0]} will be returned. Fields are ${JSON.stringify(ks)}`)
         }
       }
-      this.log.debug(fmtQuery(query, values))
+      if (options.log!==false) {
+        const elapsed = parseFloat( (performance.now() - started) / 1000.0 ).toFixed(2)
+        this.log.debug(fmtQuery(query, values))
+        this.log.debug(`Call finished in ${elapsed} seconds`)
+      }
     } catch (error) {
       this.log.error(error.constructor.name)
       this.log.error(error.stack)
@@ -52,6 +59,8 @@ class Smorm {
   }
 
   async select(query, values, options) {
+    const started = performance.now()
+
     const action = (t) => {
       return t.any(query, values)
     }
@@ -65,8 +74,12 @@ class Smorm {
 
     try {
       data = await prm
-      this.log.debug(fmtQuery(query, values))
-      this.log.debug('Returned ' + data.length + ' rows')
+
+      if (options.log!==false) {
+        const elapsed = parseFloat( (performance.now() - started) / 1000.0 ).toFixed(2)
+        this.log.debug(fmtQuery(query, values))
+        this.log.debug(`Returned ${data.length} rows in ${elapsed} seconds`)
+      }
     } catch (error) {
       this.log.error(error.constructor.name)
       this.log.error(error.stack)
@@ -83,7 +96,6 @@ class Smorm {
       : false
   
     if (data.length>1 && !omitWarning) {
-      this.log.debug(fmtQuery(query, values))
       this.log.warn('Returned ' + data.length + ' rows, but expected just 1')
     }
   
