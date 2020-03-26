@@ -25,12 +25,16 @@ class Smorm {
   async call(query, values, options) {
     const started = performance.now()
 
+    if (options===undefined)
+      options= {}
+
+
     const action = (t) => {
       return t.oneOrNone(query, values)
     }
   
-    const trx = options!=undefined
-      ? options.transaction!=undefined ? options.transaction : this.transaction
+    const trx = options.transaction!=undefined 
+      ? options.transaction 
       : this.transaction
     const prm = trx(action)
   
@@ -62,12 +66,15 @@ class Smorm {
   async select(query, values, options) {
     const started = performance.now()
 
+    if (options===undefined)
+      options= {}
+
     const action = (t) => {
       return t.any(query, values)
     }
   
-    const trx = options!=undefined
-      ? options.transaction!=undefined ? options.transaction : this.transaction
+    const trx = options.transaction!=undefined 
+      ? options.transaction 
       : this.transaction
     const prm = trx(action)
   
