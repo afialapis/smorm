@@ -1,6 +1,6 @@
 {
   "name": "smorm",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A small ORM for those out there who still feel good typing some raw SQL",
   "author": "Donato Lorenzo <donato@afialapis.com>",
   "contributors": [

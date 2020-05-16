@@ -115,6 +115,7 @@ class Model {
       data = await prm
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
+      this.db.log.error(fmtQuery(query, wvalues))
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
       data= []
@@ -237,6 +238,7 @@ class Model {
       }
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
+      this.db.log.error(fmtQuery(query, ivalues))
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
     }
@@ -323,6 +325,7 @@ class Model {
       }     
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
+      this.db.log.error(fmtQuery(query, allvalues))
       this.db.log.error(error.constructor.name)
       this.db.log.error(error.stack)
     }
@@ -392,6 +395,7 @@ class Model {
     } catch (error) {
       this.db.log.error(`${this.tablename} ERROR:`)
       this.db.log.error(error.constructor.name)
+      this.db.log.error(fmtQuery(query, wvalues))
       this.db.log.error(error.stack)
     }    
 

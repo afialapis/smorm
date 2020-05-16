@@ -56,6 +56,7 @@ class Smorm {
         this.log.debug(`Call finished in ${elapsed} seconds`)
       }
     } catch (error) {
+      this.log.error(fmtQuery(query, values))
       this.log.error(error.constructor.name)
       this.log.error(error.stack)
     }
@@ -89,6 +90,7 @@ class Smorm {
         this.log.debug(`Returned ${data.length} rows in ${elapsed} seconds`)
       }
     } catch (error) {
+      this.log.error(fmtQuery(query, values))
       this.log.error(error.constructor.name)
       this.log.error(error.stack)
     }
