@@ -66,6 +66,9 @@ class Model {
         if (typeof wvalues[i] == 'object' && wvalues[i].constructor.name=='Array') {
           return f + ' IN ($' + (i + 1) + ':csv)'
         }
+        else if (wvalues[i] === null || wvalues[i] === undefined) {
+          return f + ' IS NULL'
+        }
         else {
           return f + ' = $' + (i + 1)
         }
@@ -139,7 +142,7 @@ class Model {
     let res= {}
     const data = await this.read(filt, {fields: ['id', 'name'], transaction: options ? options.transaction : undefined})
     this.ensureDefs(data)
-    
+
     data.map((d) => {res[d.id]= d.name})
     return res
   }
