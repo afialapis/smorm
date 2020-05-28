@@ -138,6 +138,8 @@ class Model {
   async keyList(filt, options) {    
     let res= {}
     const data = await this.read(filt, {fields: ['id', 'name'], transaction: options ? options.transaction : undefined})
+    this.ensureDefs(data)
+    
     data.map((d) => {res[d.id]= d.name})
     return res
   }
