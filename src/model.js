@@ -139,12 +139,38 @@ class Model {
   }
 
   async keyList(filt, options) {    
-    let res= {}
-    const data = await this.read(filt, {fields: ['id', 'name'], transaction: options ? options.transaction : undefined})
+    
+    let data = await this.read(filt, {fields: ['id', 'name'], transaction: options ? options.transaction : undefined})
     this.ensureDefs(data)
 
+    let res= {}
     data.map((d) => {res[d.id]= d.name})
     return res
+  }
+
+  async distinct(field, filt, options) {    
+    const data = await this.read(filt, {fields: [`DISTINCT ${field}`], transaction: options ? options.transaction : undefined})
+    const res= data.map((d) => d[field])
+    return res
+  }
+
+  async count(filt, options) {    
+    let field
+    if (options!=undefined && options.distinct!=undefined) {
+      field= `COUNT(DISTINCT ${options.distinct}) AS cnt`
+    } else {
+      field= 'COUNT(1) AS cnt'
+    }
+    const data = await this.read(filt, {fields: [field], transaction: options ? options.transaction : undefined})
+    try {
+      return data[0].cnt
+    } catch(error) {
+      this.db.log.error(`${this.tablename} ERROR:`)
+      this.db.log.error(error.constructor.name)
+      this.db.log.error(error.stack)      
+    }
+
+    return 0
   }
 
 
